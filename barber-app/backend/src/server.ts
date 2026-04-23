@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import cors from 'cors';
 import { AppDataSource } from './data-source';
 import routes from './routes';
@@ -23,7 +23,7 @@ app.use(express.json());
 app.use('/api', routes);
 
 // Health check
-app.get('/health', (req, res) => {
+app.get('/health', (_req: Request, res: Response) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
