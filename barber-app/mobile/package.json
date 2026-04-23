@@ -1,0 +1,35 @@
+{
+  "name": "barber-mobile",
+  "version": "1.0.0",
+  "main": "expo/AppEntry.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web"
+  },
+  "dependencies": {
+    "react": "19.1.0",
+    "react-native": "0.81.0",
+    "expo": "~54.0.0",
+    "expo-status-bar": "~2.2.0",
+    "expo-constants": "~17.1.0",
+    "@react-navigation/native": "^7.0.0",
+    "@react-navigation/stack": "^7.0.0",
+    "@react-navigation/bottom-tabs": "^7.0.0",
+    "react-native-screens": "~4.5.0",
+    "react-native-safe-area-context": "~5.4.0",
+    "react-native-gesture-handler": "~2.24.0",
+    "axios": "^1.6.2",
+    "@react-native-async-storage/async-storage": "~2.2.0",
+    "expo-notifications": "~0.31.0",
+    "react-native-calendars": "^1.1305.0",
+    "date-fns": "^3.0.6"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.25.0",
+    "@types/react": "~19.0.0",
+    "typescript": "^5.3.3"
+  },
+  "private": true
+}
