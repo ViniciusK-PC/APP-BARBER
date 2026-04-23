@@ -7,19 +7,30 @@
     "userInterfaceStyle": "light",
     "splash": {
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#1a1a2e"
     },
+    "icon": "./assets/icon.png",
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.barberapp"
+      "bundleIdentifier": "com.viniciusk.barberapp"
     },
     "android": {
-      "package": "com.barberapp",
-      "permissions": ["NOTIFICATIONS"]
+      "package": "com.viniciusk.barberapp",
+      "versionCode": 1,
+      "permissions": ["NOTIFICATIONS"],
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#1a1a2e"
+      }
     },
     "plugins": [
       "expo-notifications"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "barber-app-viniciusk"
+      }
+    }
   }
 }
