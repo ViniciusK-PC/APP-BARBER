@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: barber-backend
+    runtime: node
+    rootDir: .
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: AUTO_SEED
+        value: true
+      - key: JWT_SECRET
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: barber-db
+          property: connectionString
+
+databases:
+  - name: barber-db
+    databaseName: barber_app
+    user: barber_user

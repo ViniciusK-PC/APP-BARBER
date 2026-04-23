@@ -8,7 +8,11 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middlewares
-app.use(cors());
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
 app.use(express.json());
 
 // Routes
@@ -21,8 +25,14 @@ app.get('/health', (req, res) => {
 
 // Initialize database and start server
 AppDataSource.initialize()
-  .then(() => {
+  .then(async () => {
     console.log('✅ Database connected successfully');
+
+    // Auto seed em produção se não houver dados
+    if (process.env.AUTO_SEED === 'true') {
+      const { seedDatabase } = await import('./utils/seed');
+      await seedDatabase();
+    }
 
     app.listen(PORT, () => {
       console.log(`🚀 Server running on port ${PORT}`);
