@@ -11,15 +11,16 @@ if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
 }
 
-// Log para debug
-console.log('🔍 DATABASE_URL exists:', !!process.env.DATABASE_URL);
-console.log('🔍 NODE_ENV:', process.env.NODE_ENV);
-console.log('🔍 All env keys:', Object.keys(process.env).filter(k => k.includes('DATABASE') || k.includes('NODE')));
-
 // Parse DATABASE_URL
 let dbConfig: any = {};
-if (process.env.DATABASE_URL) {
-  const url = new URL(process.env.DATABASE_URL);
+
+const databaseUrl = process.env.DATABASE_URL || 'postgresql://postgres.kmocrclrctgipgudthfd:9y0N0fiOnvVWOwVd@aws-1-sa-east-1.pooler.supabase.com:6543/postgres';
+
+console.log('🔍 DATABASE_URL exists:', !!process.env.DATABASE_URL);
+console.log('🔍 NODE_ENV:', process.env.NODE_ENV);
+
+try {
+  const url = new URL(databaseUrl);
   dbConfig = {
     host: url.hostname,
     port: parseInt(url.port || '5432'),
@@ -28,15 +29,9 @@ if (process.env.DATABASE_URL) {
     database: url.pathname.slice(1),
   };
   console.log('✅ Using DATABASE_URL:', url.hostname);
-} else {
-  dbConfig = {
-    host: process.env.DB_HOST || 'localhost',
-    port: parseInt(process.env.DB_PORT || '5432'),
-    username: process.env.DB_USERNAME || 'postgres',
-    password: process.env.DB_PASSWORD || 'postgres',
-    database: process.env.DB_DATABASE || 'barber_app',
-  };
-  console.log('⚠️ Using fallback config:', dbConfig.host);
+} catch (e) {
+  console.error('❌ Invalid DATABASE_URL:', e);
+  process.exit(1);
 }
 
 export const AppDataSource = new DataSource({
