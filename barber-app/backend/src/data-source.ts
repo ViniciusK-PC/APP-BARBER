@@ -1,4 +1,3 @@
-import 'dotenv/config';
 import { DataSource } from 'typeorm';
 import { User } from './entities/User';
 import { Barbershop } from './entities/Barbershop';
@@ -7,9 +6,15 @@ import { Service } from './entities/Service';
 import { Appointment } from './entities/Appointment';
 import { Notification } from './entities/Notification';
 
+// Carregar dotenv apenas em desenvolvimento
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
+
 // Log para debug
 console.log('🔍 DATABASE_URL exists:', !!process.env.DATABASE_URL);
 console.log('🔍 NODE_ENV:', process.env.NODE_ENV);
+console.log('🔍 All env keys:', Object.keys(process.env).filter(k => k.includes('DATABASE') || k.includes('NODE')));
 
 // Parse DATABASE_URL
 let dbConfig: any = {};

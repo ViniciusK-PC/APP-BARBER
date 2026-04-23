@@ -1,8 +1,12 @@
-import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import { AppDataSource } from './data-source';
 import routes from './routes';
+
+// Carregar dotenv apenas em desenvolvimento
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
 
 const app = express();
 const PORT = process.env.PORT || 3000;

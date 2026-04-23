@@ -1,12 +1,12 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// IP da sua máquina - MUDE SE NECESSÁRIO
-const API_URL = 'http://10.0.0.100:3000/api';
+// API URL - Render
+const API_URL = 'https://app-barber-jina.onrender.com/api';
 
 const api = axios.create({
   baseURL: API_URL,
-  timeout: 10000,
+  timeout: 30000, // 30 segundos (Render pode demorar na primeira requisição)
 });
 
 // Interceptor para adicionar token em todas as requisições
