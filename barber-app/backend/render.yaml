@@ -2,7 +2,7 @@ services:
   - type: web
     name: barber-backend
     runtime: node
-    rootDir: barber-app/backend
+    rootDir: backend
     buildCommand: npm install --production=false
     startCommand: npm start
     envVars:

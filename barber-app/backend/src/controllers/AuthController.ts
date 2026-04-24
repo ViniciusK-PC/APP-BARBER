@@ -53,6 +53,10 @@ export class AuthController {
 
   async login(req: Request, res: Response) {
     try {
+      const url = `${req.protocol}://${req.get('host')}/api/auth/login`;
+      console.log(`🔍 Login URL: ${url}`);
+      console.log(`📤 Login body: ${JSON.stringify(req.body)}`);
+      
       const { email, password } = req.body;
 
       const user = await this.userRepository.findOne({
@@ -77,12 +81,14 @@ export class AuthController {
 
       const { password: _, ...userWithoutPassword } = user;
 
+      console.log(`✅ Login bem-sucedido para: ${email}`);
+
       return res.json({
         user: userWithoutPassword,
         token,
       });
     } catch (error) {
-      console.error(error);
+      console.error('❌ Login error:', error);
       return res.status(500).json({ error: 'Erro ao fazer login' });
     }
   }

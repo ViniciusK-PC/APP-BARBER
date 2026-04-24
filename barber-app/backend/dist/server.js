@@ -80,6 +80,21 @@ app.get('/debug', (_req, res) => {
 });
 // ─── ROUTES ───────────────────────────────────────────────────────────────────
 app.use('/api', routes_1.default);
+// ─── LOGGING DE REQUISIÇÕES ───────────────────────────────────────────────────
+app.use((req, res, next) => {
+    console.log(`📨 ${req.method} ${req.path}`);
+    next();
+});
+// ─── 404 HANDLER ──────────────────────────────────────────────────────────────
+app.use((req, res) => {
+    console.log(`❌ 404 - ${req.method} ${req.path}`);
+    res.status(404).json({
+        error: 'Rota não encontrada',
+        path: req.path,
+        method: req.method,
+        timestamp: new Date().toISOString(),
+    });
+});
 // ─── START SERVER ─────────────────────────────────────────────────────────────
 // Sobe o servidor PRIMEIRO, depois conecta ao banco
 app.listen(PORT, () => {

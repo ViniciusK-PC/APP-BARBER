@@ -37,30 +37,65 @@ class ApiService {
   // ─── AUTH ────────────────────────────────────────────────────────────────
 
   static Future<Map<String, dynamic>> login(String email, String password) async {
-    final response = await http.post(
-      Uri.parse('$baseUrl/auth/login'),
-      headers: await getHeaders(),
-      body: jsonEncode({'email': email, 'password': password}),
-    );
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
+    try {
+      final url = Uri.parse('$baseUrl/auth/login');
+      print('🔍 Login URL: $url');
+      print('📤 Login body: ${jsonEncode({'email': email, 'password': password})}');
+      
+      final response = await http.post(
+        url,
+        headers: await getHeaders(),
+        body: jsonEncode({'email': email, 'password': password}),
+      );
+      
+      print('📥 Response status: ${response.statusCode}');
+      print('📥 Response body: ${response.body}');
+      
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      }
+      
+      try {
+        final body = jsonDecode(response.body);
+        throw Exception(body['error'] ?? 'Falha no login (${response.statusCode})');
+      } catch (e) {
+        throw Exception('Erro ao fazer login: ${response.statusCode} - ${response.body}');
+      }
+    } catch (e) {
+      print('❌ Login error: $e');
+      rethrow;
     }
-    final body = jsonDecode(response.body);
-    throw Exception(body['error'] ?? 'Falha no login');
   }
 
   static Future<Map<String, dynamic>> register(
       String name, String email, String password) async {
-    final response = await http.post(
-      Uri.parse('$baseUrl/auth/register'),
-      headers: await getHeaders(),
-      body: jsonEncode({'name': name, 'email': email, 'password': password}),
-    );
-    if (response.statusCode == 201) {
-      return jsonDecode(response.body);
+    try {
+      final url = Uri.parse('$baseUrl/auth/register');
+      print('🔍 Register URL: $url');
+      
+      final response = await http.post(
+        url,
+        headers: await getHeaders(),
+        body: jsonEncode({'name': name, 'email': email, 'password': password}),
+      );
+      
+      print('📥 Response status: ${response.statusCode}');
+      print('📥 Response body: ${response.body}');
+      
+      if (response.statusCode == 201) {
+        return jsonDecode(response.body);
+      }
+      
+      try {
+        final body = jsonDecode(response.body);
+        throw Exception(body['error'] ?? 'Falha no cadastro (${response.statusCode})');
+      } catch (e) {
+        throw Exception('Erro ao fazer cadastro: ${response.statusCode} - ${response.body}');
+      }
+    } catch (e) {
+      print('❌ Register error: $e');
+      rethrow;
     }
-    final body = jsonDecode(response.body);
-    throw Exception(body['error'] ?? 'Falha no cadastro');
   }
 
   // ─── BARBERSHOPS ─────────────────────────────────────────────────────────
