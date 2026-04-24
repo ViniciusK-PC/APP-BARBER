@@ -28,6 +28,6 @@ echo Fazendo deploy...
 npx vercel build/web --prod --yes
 echo.
 echo App atualizado em: https://web-nine-mu-18.vercel.app
-echo Backend conectado em: https://app-barber-jlna.onrender.com
+echo Backend conectado em: https://app-barber-jina.onrender.com
 pause
 exit
