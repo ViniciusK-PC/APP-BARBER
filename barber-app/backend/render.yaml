@@ -3,7 +3,7 @@ services:
     name: barber-backend
     runtime: node
     rootDir: backend
-    buildCommand: npm install --production=false
+    buildCommand: npm install --production=false && npx tsc
     startCommand: npm start
     envVars:
       - key: NODE_ENV
