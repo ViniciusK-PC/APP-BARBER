@@ -18,6 +18,10 @@ const appointment = () => new AppointmentController_1.AppointmentController();
 router.post('/auth/register', (req, res) => auth().register(req, res));
 router.post('/auth/login', (req, res) => auth().login(req, res));
 router.post('/auth/fcm-token', (req, res) => auth().updateFcmToken(req, res));
+// Rota de teste para verificar se as rotas /api estão funcionando
+router.get('/test', (req, res) => {
+    res.json({ message: 'API está funcionando!', timestamp: new Date().toISOString() });
+});
 // Barbershop routes
 router.get('/barbershops', (req, res) => barbershop().list(req, res));
 router.get('/barbershops/:id', (req, res) => barbershop().getById(req, res));

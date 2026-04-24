@@ -20,6 +20,11 @@ router.post('/auth/register', (req: Request, res: Response) => auth().register(r
 router.post('/auth/login', (req: Request, res: Response) => auth().login(req, res));
 router.post('/auth/fcm-token', (req: Request, res: Response) => auth().updateFcmToken(req, res));
 
+// Rota de teste para verificar se as rotas /api estão funcionando
+router.get('/test', (req: Request, res: Response) => {
+  res.json({ message: 'API está funcionando!', timestamp: new Date().toISOString() });
+});
+
 // Barbershop routes
 router.get('/barbershops', (req: Request, res: Response) => barbershop().list(req, res));
 router.get('/barbershops/:id', (req: Request, res: Response) => barbershop().getById(req, res));
