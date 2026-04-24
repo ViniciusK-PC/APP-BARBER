@@ -8,71 +8,43 @@ import { authMiddleware, adminMiddleware } from '../middlewares/auth';
 
 const router = Router();
 
-// Controllers
-const authController = new AuthController();
-const barbershopController = new BarbershopController();
-const barberController = new BarberController();
-const serviceController = new ServiceController();
-const appointmentController = new AppointmentController();
+// Lazy instantiation — controllers criados apenas quando a rota é chamada
+const auth = () => new AuthController();
+const barbershop = () => new BarbershopController();
+const barber = () => new BarberController();
+const service = () => new ServiceController();
+const appointment = () => new AppointmentController();
 
 // Auth routes
-router.post('/auth/register', (req: Request, res: Response) => authController.register(req, res));
-router.post('/auth/login', (req: Request, res: Response) => authController.login(req, res));
-router.post('/auth/fcm-token', (req: Request, res: Response) => authController.updateFcmToken(req, res));
+router.post('/auth/register', (req: Request, res: Response) => auth().register(req, res));
+router.post('/auth/login', (req: Request, res: Response) => auth().login(req, res));
+router.post('/auth/fcm-token', (req: Request, res: Response) => auth().updateFcmToken(req, res));
 
 // Barbershop routes
-router.get('/barbershops', (req: Request, res: Response) => barbershopController.list(req, res));
-router.get('/barbershops/:id', (req: Request, res: Response) => barbershopController.getById(req, res));
-router.post('/barbershops', authMiddleware, adminMiddleware, (req: Request, res: Response) =>
-  barbershopController.create(req, res)
-);
-router.put('/barbershops/:id', authMiddleware, adminMiddleware, (req: Request, res: Response) =>
-  barbershopController.update(req, res)
-);
+router.get('/barbershops', (req: Request, res: Response) => barbershop().list(req, res));
+router.get('/barbershops/:id', (req: Request, res: Response) => barbershop().getById(req, res));
+router.post('/barbershops', authMiddleware, adminMiddleware, (req: Request, res: Response) => barbershop().create(req, res));
+router.put('/barbershops/:id', authMiddleware, adminMiddleware, (req: Request, res: Response) => barbershop().update(req, res));
 
 // Barber routes
-router.get('/barbers', (req: Request, res: Response) => barberController.list(req, res));
-router.get('/barbers/:id', (req: Request, res: Response) => barberController.getById(req, res));
-router.post('/barbers', authMiddleware, adminMiddleware, (req: Request, res: Response) =>
-  barberController.create(req, res)
-);
-router.put('/barbers/:id', authMiddleware, adminMiddleware, (req: Request, res: Response) =>
-  barberController.update(req, res)
-);
-router.delete('/barbers/:id', authMiddleware, adminMiddleware, (req: Request, res: Response) =>
-  barberController.delete(req, res)
-);
+router.get('/barbers', (req: Request, res: Response) => barber().list(req, res));
+router.get('/barbers/:id', (req: Request, res: Response) => barber().getById(req, res));
+router.post('/barbers', authMiddleware, adminMiddleware, (req: Request, res: Response) => barber().create(req, res));
+router.put('/barbers/:id', authMiddleware, adminMiddleware, (req: Request, res: Response) => barber().update(req, res));
+router.delete('/barbers/:id', authMiddleware, adminMiddleware, (req: Request, res: Response) => barber().delete(req, res));
 
 // Service routes
-router.get('/services', (req: Request, res: Response) => serviceController.list(req, res));
-router.post('/services', authMiddleware, adminMiddleware, (req: Request, res: Response) =>
-  serviceController.create(req, res)
-);
-router.put('/services/:id', authMiddleware, adminMiddleware, (req: Request, res: Response) =>
-  serviceController.update(req, res)
-);
-router.delete('/services/:id', authMiddleware, adminMiddleware, (req: Request, res: Response) =>
-  serviceController.delete(req, res)
-);
+router.get('/services', (req: Request, res: Response) => service().list(req, res));
+router.post('/services', authMiddleware, adminMiddleware, (req: Request, res: Response) => service().create(req, res));
+router.put('/services/:id', authMiddleware, adminMiddleware, (req: Request, res: Response) => service().update(req, res));
+router.delete('/services/:id', authMiddleware, adminMiddleware, (req: Request, res: Response) => service().delete(req, res));
 
 // Appointment routes
-router.get('/appointments/available-slots', authMiddleware, (req: Request, res: Response) =>
-  appointmentController.getAvailableSlots(req, res)
-);
-router.get('/appointments/admin/stats', authMiddleware, adminMiddleware, (req: Request, res: Response) =>
-  appointmentController.getStats(req, res)
-);
-router.get('/appointments/admin/all', authMiddleware, adminMiddleware, (req: Request, res: Response) =>
-  appointmentController.listAll(req, res)
-);
-router.get('/appointments', authMiddleware, (req: Request, res: Response) =>
-  appointmentController.list(req, res)
-);
-router.post('/appointments', authMiddleware, (req: Request, res: Response) =>
-  appointmentController.create(req, res)
-);
-router.put('/appointments/:id/status', authMiddleware, (req: Request, res: Response) =>
-  appointmentController.updateStatus(req, res)
-);
+router.get('/appointments/available-slots', authMiddleware, (req: Request, res: Response) => appointment().getAvailableSlots(req, res));
+router.get('/appointments/admin/stats', authMiddleware, adminMiddleware, (req: Request, res: Response) => appointment().getStats(req, res));
+router.get('/appointments/admin/all', authMiddleware, adminMiddleware, (req: Request, res: Response) => appointment().listAll(req, res));
+router.get('/appointments', authMiddleware, (req: Request, res: Response) => appointment().list(req, res));
+router.post('/appointments', authMiddleware, (req: Request, res: Response) => appointment().create(req, res));
+router.put('/appointments/:id/status', authMiddleware, (req: Request, res: Response) => appointment().updateStatus(req, res));
 
 export default router;
