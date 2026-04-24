@@ -57,14 +57,8 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   next();
 });
 
-// ─── START SERVER ─────────────────────────────────────────────────────────────
-// Sobe o servidor PRIMEIRO, depois conecta ao banco
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-});
-
 // ─── 404 HANDLER ──────────────────────────────────────────────────────────────
-// DEVE SER O ÚLTIMO MIDDLEWARE
+// DEVE SER O ÚLTIMO MIDDLEWARE (antes do app.listen)
 app.use((req: Request, res: Response) => {
   console.log(`❌ 404 - ${req.method} ${req.path}`);
   res.status(404).json({
@@ -73,6 +67,12 @@ app.use((req: Request, res: Response) => {
     method: req.method,
     timestamp: new Date().toISOString(),
   });
+});
+
+// ─── START SERVER ─────────────────────────────────────────────────────────────
+// Sobe o servidor PRIMEIRO, depois conecta ao banco
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
 });
 
 // Conecta ao banco após o servidor já estar ouvindo
