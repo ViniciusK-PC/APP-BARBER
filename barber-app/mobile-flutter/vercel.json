@@ -3,7 +3,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://app-barber-jina.onrender.com/api/:path*"
+      "destination": "https://app-barber-jlna.onrender.com/api/:path*"
     },
     {
       "source": "/(.*)",
