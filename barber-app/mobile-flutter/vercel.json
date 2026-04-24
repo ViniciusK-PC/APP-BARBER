@@ -1,18 +1,13 @@
 {
-  "buildCommand": null,
   "outputDirectory": "build/web",
-  "framework": null,
   "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
-  ],
-  "headers": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://app-barber-jina.onrender.com/api/:path*"
+    },
     {
       "source": "/(.*)",
-      "headers": [
-        { "key": "Access-Control-Allow-Origin", "value": "*" },
-        { "key": "Access-Control-Allow-Methods", "value": "GET,POST,PUT,DELETE,OPTIONS,PATCH" },
-        { "key": "Access-Control-Allow-Headers", "value": "Content-Type,Authorization,Accept,Origin,X-Requested-With" }
-      ]
+      "destination": "/index.html"
     }
   ]
 }
