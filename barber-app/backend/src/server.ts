@@ -1,5 +1,4 @@
 import express, { Request, Response, NextFunction } from 'express';
-import cors from 'cors';
 import { AppDataSource } from './data-source';
 import routes from './routes';
 
@@ -11,56 +10,52 @@ if (process.env.NODE_ENV !== 'production') {
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// CORS manual - deve vir ANTES de tudo
+// ─── CORS ─────────────────────────────────────────────────────────────────────
+// Deve ser o PRIMEIRO middleware — antes de tudo
 app.use((req: Request, res: Response, next: NextFunction) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS,PATCH');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization,Accept,Origin,X-Requested-With');
+  res.setHeader('Access-Control-Max-Age', '86400');
 
+  // Responde imediatamente ao preflight
   if (req.method === 'OPTIONS') {
-    res.status(200).end();
+    res.status(204).end();
     return;
   }
-
   next();
 });
 
-app.use(cors({
-  origin: '*',
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
-  allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization'],
-  credentials: false,
-  optionsSuccessStatus: 200,
-}));
-
+// ─── BODY PARSERS ─────────────────────────────────────────────────────────────
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Routes
-app.use('/api', routes);
-
-// Health check
+// ─── HEALTH CHECK ─────────────────────────────────────────────────────────────
+// Disponível ANTES do banco conectar
 app.get('/health', (_req: Request, res: Response) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-// Initialize database and start server
+// ─── ROUTES ───────────────────────────────────────────────────────────────────
+app.use('/api', routes);
+
+// ─── START SERVER ─────────────────────────────────────────────────────────────
+// Sobe o servidor PRIMEIRO, depois conecta ao banco
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+});
+
+// Conecta ao banco após o servidor já estar ouvindo
 AppDataSource.initialize()
   .then(async () => {
     console.log('✅ Database connected successfully');
 
-    // Auto seed em produção se não houver dados
     if (process.env.AUTO_SEED === 'true') {
       const { seedDatabase } = await import('./utils/seed');
       await seedDatabase();
     }
-
-    app.listen(PORT, () => {
-      console.log(`🚀 Server running on port ${PORT}`);
-      console.log(`📍 API: http://localhost:${PORT}/api`);
-    });
   })
   .catch((error) => {
     console.error('❌ Error connecting to database:', error);
-    process.exit(1);
+    // NÃO faz process.exit — servidor continua rodando
   });
