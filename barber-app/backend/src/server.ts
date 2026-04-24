@@ -36,6 +36,18 @@ app.get('/health', (_req: Request, res: Response) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
+// Diagnóstico detalhado
+app.get('/debug', (_req: Request, res: Response) => {
+  res.json({
+    status: 'server_running',
+    node_env: process.env.NODE_ENV,
+    has_database_url: !!process.env.DATABASE_URL,
+    has_jwt_secret: !!process.env.JWT_SECRET,
+    db_connected: AppDataSource.isInitialized,
+    timestamp: new Date().toISOString(),
+  });
+});
+
 // ─── ROUTES ───────────────────────────────────────────────────────────────────
 app.use('/api', routes);
 
