@@ -48,14 +48,14 @@ app.get('/debug', (_req: Request, res: Response) => {
   });
 });
 
-// ─── ROUTES ───────────────────────────────────────────────────────────────────
-app.use('/api', routes);
-
 // ─── LOGGING DE REQUISIÇÕES ───────────────────────────────────────────────────
 app.use((req: Request, res: Response, next: NextFunction) => {
   console.log(`📨 ${req.method} ${req.path}`);
   next();
 });
+
+// ─── ROUTES ───────────────────────────────────────────────────────────────────
+app.use('/api', routes);
 
 // ─── 404 HANDLER ──────────────────────────────────────────────────────────────
 // DEVE SER O ÚLTIMO MIDDLEWARE (antes do app.listen)

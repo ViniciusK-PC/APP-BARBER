@@ -78,13 +78,13 @@ app.get('/debug', (_req, res) => {
         timestamp: new Date().toISOString(),
     });
 });
-// ─── ROUTES ───────────────────────────────────────────────────────────────────
-app.use('/api', routes_1.default);
 // ─── LOGGING DE REQUISIÇÕES ───────────────────────────────────────────────────
 app.use((req, res, next) => {
     console.log(`📨 ${req.method} ${req.path}`);
     next();
 });
+// ─── ROUTES ───────────────────────────────────────────────────────────────────
+app.use('/api', routes_1.default);
 // ─── 404 HANDLER ──────────────────────────────────────────────────────────────
 // DEVE SER O ÚLTIMO MIDDLEWARE (antes do app.listen)
 app.use((req, res) => {
