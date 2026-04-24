@@ -1,25 +1,33 @@
 class Barber {
-  final int id;
+  final String id;
   final String name;
   final String? specialty;
-  final bool active;
-  final int barbershopId;
+  final String? phone;
+  final String? email;
+  final bool isActive;
+  final String barbershopId;
 
   Barber({
     required this.id,
     required this.name,
     this.specialty,
-    required this.active,
+    this.phone,
+    this.email,
+    required this.isActive,
     required this.barbershopId,
   });
 
+  bool get active => isActive;
+
   factory Barber.fromJson(Map<String, dynamic> json) {
     return Barber(
-      id: json['id'],
-      name: json['name'],
+      id: json['id'].toString(),
+      name: json['name'] ?? '',
       specialty: json['specialty'],
-      active: json['active'] ?? true,
-      barbershopId: json['barbershopId'],
+      phone: json['phone'],
+      email: json['email'],
+      isActive: json['isActive'] ?? true,
+      barbershopId: json['barbershopId']?.toString() ?? '',
     );
   }
 
@@ -28,7 +36,9 @@ class Barber {
       'id': id,
       'name': name,
       'specialty': specialty,
-      'active': active,
+      'phone': phone,
+      'email': email,
+      'isActive': isActive,
       'barbershopId': barbershopId,
     };
   }

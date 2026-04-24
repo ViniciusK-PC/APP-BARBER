@@ -51,7 +51,7 @@ class _AdminAppointmentsScreenState extends State<AdminAppointmentsScreen> {
     });
   }
 
-  Future<void> _updateStatus(int id, String status) async {
+  Future<void> _updateStatus(String id, String status) async {
     try {
       await ApiService.updateAppointmentStatus(id, status);
       ScaffoldMessenger.of(context).showSnackBar(

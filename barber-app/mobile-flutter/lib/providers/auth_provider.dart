@@ -22,11 +22,9 @@ class AuthProvider with ChangeNotifier {
 
     try {
       final response = await ApiService.login(email, password);
-      _token = response['token'];
-      _user = User.fromJson(response['user']);
-      
+      _token = response['token'] as String;
+      _user = User.fromJson(response['user'] as Map<String, dynamic>);
       await ApiService.saveToken(_token!);
-      
       _isLoading = false;
       notifyListeners();
     } catch (e) {
@@ -44,11 +42,9 @@ class AuthProvider with ChangeNotifier {
 
     try {
       final response = await ApiService.register(name, email, password);
-      _token = response['token'];
-      _user = User.fromJson(response['user']);
-      
+      _token = response['token'] as String;
+      _user = User.fromJson(response['user'] as Map<String, dynamic>);
       await ApiService.saveToken(_token!);
-      
       _isLoading = false;
       notifyListeners();
     } catch (e) {
@@ -70,8 +66,6 @@ class AuthProvider with ChangeNotifier {
     final token = await ApiService.getToken();
     if (token != null) {
       _token = token;
-      // Aqui você pode fazer uma requisição para validar o token
-      // e buscar os dados do usuário
       notifyListeners();
     }
   }

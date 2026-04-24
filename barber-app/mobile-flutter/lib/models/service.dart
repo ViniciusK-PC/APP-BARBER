@@ -1,11 +1,11 @@
 class Service {
-  final int id;
+  final String id;
   final String name;
   final String? description;
   final double price;
   final int duration;
-  final bool active;
-  final int barbershopId;
+  final bool isActive;
+  final String barbershopId;
 
   Service({
     required this.id,
@@ -13,19 +13,21 @@ class Service {
     this.description,
     required this.price,
     required this.duration,
-    required this.active,
+    required this.isActive,
     required this.barbershopId,
   });
 
+  bool get active => isActive;
+
   factory Service.fromJson(Map<String, dynamic> json) {
     return Service(
-      id: json['id'],
-      name: json['name'],
+      id: json['id'].toString(),
+      name: json['name'] ?? '',
       description: json['description'],
-      price: (json['price'] as num).toDouble(),
-      duration: json['duration'],
-      active: json['active'] ?? true,
-      barbershopId: json['barbershopId'],
+      price: (json['price'] as num?)?.toDouble() ?? 0.0,
+      duration: json['duration'] ?? 30,
+      isActive: json['isActive'] ?? true,
+      barbershopId: json['barbershopId']?.toString() ?? '',
     );
   }
 
@@ -36,7 +38,7 @@ class Service {
       'description': description,
       'price': price,
       'duration': duration,
-      'active': active,
+      'isActive': isActive,
       'barbershopId': barbershopId,
     };
   }

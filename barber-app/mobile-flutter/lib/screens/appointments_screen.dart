@@ -37,7 +37,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
     }
   }
 
-  Future<void> _cancelAppointment(int id) async {
+  Future<void> _cancelAppointment(String id) async {
     try {
       await ApiService.updateAppointmentStatus(id, 'cancelled');
       ScaffoldMessenger.of(context).showSnackBar(

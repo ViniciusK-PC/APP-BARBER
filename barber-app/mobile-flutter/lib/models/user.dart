@@ -1,9 +1,9 @@
 class User {
-  final int id;
+  final String id;
   final String name;
   final String email;
   final String? phone;
-  final bool isAdmin;
+  final String role; // 'admin' ou 'client'
   final DateTime createdAt;
 
   User({
@@ -11,18 +11,22 @@ class User {
     required this.name,
     required this.email,
     this.phone,
-    required this.isAdmin,
+    required this.role,
     required this.createdAt,
   });
 
+  bool get isAdmin => role == 'admin';
+
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      id: json['id'],
-      name: json['name'],
-      email: json['email'],
+      id: json['id'].toString(),
+      name: json['name'] ?? '',
+      email: json['email'] ?? '',
       phone: json['phone'],
-      isAdmin: json['isAdmin'] ?? false,
-      createdAt: DateTime.parse(json['createdAt']),
+      role: json['role'] ?? 'client',
+      createdAt: json['createdAt'] != null
+          ? DateTime.parse(json['createdAt'])
+          : DateTime.now(),
     );
   }
 
@@ -32,7 +36,7 @@ class User {
       'name': name,
       'email': email,
       'phone': phone,
-      'isAdmin': isAdmin,
+      'role': role,
       'createdAt': createdAt.toIso8601String(),
     };
   }

@@ -3,9 +3,8 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
-  // URL do backend no Render (produção)
   static const String baseUrl = 'https://app-barber-jina.onrender.com/api';
-  
+
   static Future<String?> getToken() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString('token');
@@ -22,164 +21,149 @@ class ApiService {
   }
 
   static Future<Map<String, String>> getHeaders({bool requiresAuth = false}) async {
-    final headers = {
+    final headers = <String, String>{
       'Content-Type': 'application/json',
+      'Accept': 'application/json',
     };
-
     if (requiresAuth) {
       final token = await getToken();
       if (token != null) {
         headers['Authorization'] = 'Bearer $token';
       }
     }
-
     return headers;
   }
 
-  // Auth
+  // ─── AUTH ────────────────────────────────────────────────────────────────
+
   static Future<Map<String, dynamic>> login(String email, String password) async {
     final response = await http.post(
       Uri.parse('$baseUrl/auth/login'),
       headers: await getHeaders(),
       body: jsonEncode({'email': email, 'password': password}),
     );
-
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
-    } else {
-      throw Exception('Falha no login: ${response.body}');
     }
+    final body = jsonDecode(response.body);
+    throw Exception(body['error'] ?? 'Falha no login');
   }
 
-  static Future<Map<String, dynamic>> register(String name, String email, String password) async {
+  static Future<Map<String, dynamic>> register(
+      String name, String email, String password) async {
     final response = await http.post(
       Uri.parse('$baseUrl/auth/register'),
       headers: await getHeaders(),
       body: jsonEncode({'name': name, 'email': email, 'password': password}),
     );
-
     if (response.statusCode == 201) {
       return jsonDecode(response.body);
-    } else {
-      throw Exception('Falha no cadastro: ${response.body}');
     }
+    final body = jsonDecode(response.body);
+    throw Exception(body['error'] ?? 'Falha no cadastro');
   }
 
-  // Barbershops
+  // ─── BARBERSHOPS ─────────────────────────────────────────────────────────
+
   static Future<List<dynamic>> getBarbershops() async {
     final response = await http.get(
       Uri.parse('$baseUrl/barbershops'),
       headers: await getHeaders(),
     );
-
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
-    } else {
-      throw Exception('Falha ao carregar barbearias');
-    }
+    if (response.statusCode == 200) return jsonDecode(response.body);
+    throw Exception('Falha ao carregar barbearias');
   }
 
-  static Future<Map<String, dynamic>> getBarbershop(int id) async {
+  static Future<Map<String, dynamic>> getBarbershop(String id) async {
     final response = await http.get(
       Uri.parse('$baseUrl/barbershops/$id'),
       headers: await getHeaders(),
     );
-
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
-    } else {
-      throw Exception('Falha ao carregar barbearia');
-    }
+    if (response.statusCode == 200) return jsonDecode(response.body);
+    throw Exception('Falha ao carregar barbearia');
   }
 
-  // Barbers
-  static Future<List<dynamic>> getBarbers() async {
-    final response = await http.get(
-      Uri.parse('$baseUrl/barbers'),
-      headers: await getHeaders(),
-    );
+  // ─── BARBERS ─────────────────────────────────────────────────────────────
 
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
-    } else {
-      throw Exception('Falha ao carregar barbeiros');
-    }
+  static Future<List<dynamic>> getBarbers({String? barbershopId}) async {
+    final uri = barbershopId != null
+        ? Uri.parse('$baseUrl/barbers?barbershopId=$barbershopId')
+        : Uri.parse('$baseUrl/barbers');
+    final response = await http.get(uri, headers: await getHeaders());
+    if (response.statusCode == 200) return jsonDecode(response.body);
+    throw Exception('Falha ao carregar barbeiros');
   }
 
-  // Services
-  static Future<List<dynamic>> getServices() async {
-    final response = await http.get(
-      Uri.parse('$baseUrl/services'),
-      headers: await getHeaders(),
-    );
+  // ─── SERVICES ────────────────────────────────────────────────────────────
 
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
-    } else {
-      throw Exception('Falha ao carregar serviços');
-    }
+  static Future<List<dynamic>> getServices({String? barbershopId}) async {
+    final uri = barbershopId != null
+        ? Uri.parse('$baseUrl/services?barbershopId=$barbershopId')
+        : Uri.parse('$baseUrl/services');
+    final response = await http.get(uri, headers: await getHeaders());
+    if (response.statusCode == 200) return jsonDecode(response.body);
+    throw Exception('Falha ao carregar serviços');
   }
 
-  // Appointments
+  // ─── APPOINTMENTS ────────────────────────────────────────────────────────
+
   static Future<List<dynamic>> getAppointments() async {
     final response = await http.get(
       Uri.parse('$baseUrl/appointments'),
       headers: await getHeaders(requiresAuth: true),
     );
-
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
-    } else {
-      throw Exception('Falha ao carregar agendamentos');
-    }
+    if (response.statusCode == 200) return jsonDecode(response.body);
+    throw Exception('Falha ao carregar agendamentos');
   }
 
+  /// Backend espera: barberId, serviceId, date (YYYY-MM-DD), time (HH:MM)
   static Future<Map<String, dynamic>> createAppointment({
-    required int barberId,
-    required int serviceId,
+    required String barberId,
+    required String serviceId,
     required DateTime dateTime,
+    String? notes,
   }) async {
+    final date =
+        '${dateTime.year}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.day.toString().padLeft(2, '0')}';
+    final time =
+        '${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
+
     final response = await http.post(
       Uri.parse('$baseUrl/appointments'),
       headers: await getHeaders(requiresAuth: true),
       body: jsonEncode({
         'barberId': barberId,
         'serviceId': serviceId,
-        'dateTime': dateTime.toIso8601String(),
+        'date': date,
+        'time': time,
+        if (notes != null) 'notes': notes,
       }),
     );
-
-    if (response.statusCode == 201) {
-      return jsonDecode(response.body);
-    } else {
-      throw Exception('Falha ao criar agendamento: ${response.body}');
-    }
+    if (response.statusCode == 201) return jsonDecode(response.body);
+    final body = jsonDecode(response.body);
+    throw Exception(body['error'] ?? 'Falha ao criar agendamento');
   }
 
-  static Future<void> updateAppointmentStatus(int id, String status) async {
+  static Future<void> updateAppointmentStatus(String id, String status) async {
     final response = await http.put(
       Uri.parse('$baseUrl/appointments/$id/status'),
       headers: await getHeaders(requiresAuth: true),
       body: jsonEncode({'status': status}),
     );
-
     if (response.statusCode != 200) {
       throw Exception('Falha ao atualizar status');
     }
   }
 
-  // Admin
+  // ─── ADMIN ───────────────────────────────────────────────────────────────
+
   static Future<Map<String, dynamic>> getAdminStats() async {
     final response = await http.get(
       Uri.parse('$baseUrl/appointments/admin/stats'),
       headers: await getHeaders(requiresAuth: true),
     );
-
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
-    } else {
-      throw Exception('Falha ao carregar estatísticas');
-    }
+    if (response.statusCode == 200) return jsonDecode(response.body);
+    throw Exception('Falha ao carregar estatísticas');
   }
 
   static Future<List<dynamic>> getAllAppointments() async {
@@ -187,11 +171,7 @@ class ApiService {
       Uri.parse('$baseUrl/appointments/admin/all'),
       headers: await getHeaders(requiresAuth: true),
     );
-
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
-    } else {
-      throw Exception('Falha ao carregar todos os agendamentos');
-    }
+    if (response.statusCode == 200) return jsonDecode(response.body);
+    throw Exception('Falha ao carregar todos os agendamentos');
   }
 }

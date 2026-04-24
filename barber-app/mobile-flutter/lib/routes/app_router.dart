@@ -30,7 +30,7 @@ class AppRouter {
       GoRoute(
         path: '/barbershop/:id',
         builder: (context, state) {
-          final id = int.parse(state.pathParameters['id']!);
+          final id = state.pathParameters['id']!;
           return BarbershopDetailScreen(barbershopId: id);
         },
       ),
@@ -39,8 +39,8 @@ class AppRouter {
         builder: (context, state) {
           final extra = state.extra as Map<String, dynamic>;
           return BookingScreen(
-            barbershopId: extra['barbershopId'],
-            barbershopName: extra['barbershopName'],
+            barbershopId: extra['barbershopId'] as String,
+            barbershopName: extra['barbershopName'] as String,
           );
         },
       ),

@@ -7,7 +7,7 @@ import '../services/api_service.dart';
 import '../utils/theme.dart';
 
 class BarbershopDetailScreen extends StatefulWidget {
-  final int barbershopId;
+  final String barbershopId;
 
   const BarbershopDetailScreen({super.key, required this.barbershopId});
 
@@ -32,18 +32,18 @@ class _BarbershopDetailScreenState extends State<BarbershopDetailScreen> {
 
     try {
       final barbershopData = await ApiService.getBarbershop(widget.barbershopId);
-      final barbersData = await ApiService.getBarbers();
-      final servicesData = await ApiService.getServices();
+      final barbersData = await ApiService.getBarbers(barbershopId: widget.barbershopId);
+      final servicesData = await ApiService.getServices(barbershopId: widget.barbershopId);
 
       setState(() {
         _barbershop = Barbershop.fromJson(barbershopData);
         _barbers = barbersData
             .map((json) => Barber.fromJson(json))
-            .where((b) => b.barbershopId == widget.barbershopId && b.active)
+            .where((b) => b.isActive)
             .toList();
         _services = servicesData
             .map((json) => Service.fromJson(json))
-            .where((s) => s.barbershopId == widget.barbershopId && s.active)
+            .where((s) => s.isActive)
             .toList();
         _isLoading = false;
       });
