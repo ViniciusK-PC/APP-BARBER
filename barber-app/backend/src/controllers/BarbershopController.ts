@@ -3,7 +3,9 @@ import { AppDataSource } from '../data-source';
 import { Barbershop } from '../entities/Barbershop';
 
 export class BarbershopController {
-  private barbershopRepository = AppDataSource.getRepository(Barbershop);
+  private get barbershopRepository() {
+    return AppDataSource.getRepository(Barbershop);
+  }
 
   async create(req: Request, res: Response) {
     try {

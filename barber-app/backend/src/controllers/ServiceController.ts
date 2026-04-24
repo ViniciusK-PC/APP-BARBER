@@ -3,7 +3,9 @@ import { AppDataSource } from '../data-source';
 import { Service } from '../entities/Service';
 
 export class ServiceController {
-  private serviceRepository = AppDataSource.getRepository(Service);
+  private get serviceRepository() {
+    return AppDataSource.getRepository(Service);
+  }
 
   async create(req: Request, res: Response) {
     try {

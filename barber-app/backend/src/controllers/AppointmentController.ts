@@ -6,7 +6,9 @@ import { NotificationService } from '../utils/notifications';
 import { Between } from 'typeorm';
 
 export class AppointmentController {
-  private appointmentRepository = AppDataSource.getRepository(Appointment);
+  private get appointmentRepository() {
+    return AppDataSource.getRepository(Appointment);
+  }
   private notificationService = new NotificationService();
 
   async create(req: AuthRequest, res: Response) {

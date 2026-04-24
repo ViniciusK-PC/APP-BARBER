@@ -5,7 +5,9 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
 export class AuthController {
-  private userRepository = AppDataSource.getRepository(User);
+  private get userRepository() {
+    return AppDataSource.getRepository(User);
+  }
 
   async register(req: Request, res: Response) {
     try {
