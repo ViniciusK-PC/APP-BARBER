@@ -1,0 +1,14 @@
+{
+  "providers": ["java"],
+  "phases": {
+    "setup": {
+      "nixPkgs": ["jdk21", "maven"]
+    },
+    "build": {
+      "cmds": ["mvn clean package -DskipTests"]
+    },
+    "start": {
+      "cmd": "java -Dserver.port=$PORT -jar target/barber-app-1.0.0.jar"
+    }
+  }
+}
