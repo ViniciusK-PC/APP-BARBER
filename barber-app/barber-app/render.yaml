@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: barber-app-api
+    env: java
+    buildCommand: mvn clean package -DskipTests
+    startCommand: java -jar target/barber-app-1.0.0.jar
+    envVars:
+      - key: JAVA_VERSION
+        value: 21
+      - key: MAVEN_VERSION
+        value: 3.9.9
+      - key: DATABASE_URL
+        value: jdbc:postgresql://aws-1-sa-east-1.pooler.supabase.com:6543/postgres
+      - key: DATABASE_USERNAME
+        value: postgres.kmocrclrctgipgudthfd
+      - key: DATABASE_PASSWORD
+        value: 9y0N0fiOnvVWOwVd
+      - key: JWT_SECRET
+        value: barber-app-secret-key-production-2024-render
+      - key: JWT_EXPIRATION
+        value: 86400000

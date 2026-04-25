@@ -1,0 +1,41 @@
+spring:
+  application:
+    name: barber-app
+  
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://aws-1-sa-east-1.pooler.supabase.com:6543/postgres}
+    username: ${DATABASE_USERNAME:postgres.kmocrclrctgipgudthfd}
+    password: ${DATABASE_PASSWORD:9y0N0fiOnvVWOwVd}
+    driver-class-name: org.postgresql.Driver
+  
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: false
+    open-in-view: false
+  
+  jackson:
+    time-zone: America/Sao_Paulo
+    date-format: yyyy-MM-dd'T'HH:mm:ss
+
+server:
+  port: ${PORT:8080}
+  servlet:
+    context-path: /api
+
+# JWT Configuration
+jwt:
+  secret: ${JWT_SECRET:barber-app-secret-key-change-in-production-2024}
+  expiration: ${JWT_EXPIRATION:86400000}
+
+# Swagger/OpenAPI
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
