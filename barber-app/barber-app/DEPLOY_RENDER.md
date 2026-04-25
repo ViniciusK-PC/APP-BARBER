@@ -1,4 +1,4 @@
-# 🚀 Deploy no Render - Barber App API
+# 🚀 Deploy no Render - Barber App API (Docker)
 
 ## 📋 Pré-requisitos
 
@@ -36,7 +36,7 @@ git push -u origin main
 
 ---
 
-## 🌐 PASSO 2: Deploy no Render
+## 🐳 PASSO 2: Deploy no Render com Docker
 
 ### 1️⃣ Criar conta no Render
 
@@ -61,9 +61,9 @@ git push -u origin main
 | **Region** | `Oregon (US West)` ou mais próximo |
 | **Branch** | `main` |
 | **Root Directory** | `barber-app` |
-| **Runtime** | `Java` |
-| **Build Command** | `mvn clean package -DskipTests` |
-| **Start Command** | `java -Dserver.port=$PORT -jar target/barber-app-1.0.0.jar` |
+| **Environment** | **Docker** ⭐ |
+
+**IMPORTANTE:** Selecione **Docker** no campo Environment!
 
 **Instance Type:**
 - Escolha: **Free** (para teste)
@@ -79,15 +79,17 @@ DATABASE_USERNAME=postgres.kmocrclrctgipgudthfd
 DATABASE_PASSWORD=9y0N0fiOnvVWOwVd
 JWT_SECRET=barber-app-secret-key-production-2024-render
 JWT_EXPIRATION=86400000
-JAVA_VERSION=21
-MAVEN_VERSION=3.9.9
 ```
 
 ### 5️⃣ Deploy
 
 1. Clique em **Create Web Service**
 2. Aguarde o build (5-10 minutos)
-3. Quando aparecer **Live**, está pronto! 🎉
+3. O Render vai:
+   - Detectar o `Dockerfile`
+   - Fazer build da imagem Docker
+   - Iniciar o container
+4. Quando aparecer **Live**, está pronto! 🎉
 
 ---
 
@@ -149,6 +151,32 @@ O Render vai fazer deploy automático! 🚀
 
 ---
 
+## 🐳 Sobre o Docker
+
+### Vantagens:
+✅ Funciona em qualquer ambiente
+✅ Build consistente
+✅ Isolamento completo
+✅ Fácil de escalar
+
+### O que o Dockerfile faz:
+1. **Stage 1 (Build):**
+   - Usa Maven + Java 21
+   - Compila o projeto
+   - Gera o JAR
+
+2. **Stage 2 (Runtime):**
+   - Usa apenas JRE (mais leve)
+   - Copia o JAR compilado
+   - Configura porta dinâmica
+   - Inicia a aplicação
+
+### Tamanho da imagem:
+- **Build:** ~800 MB (temporário)
+- **Final:** ~200 MB (otimizado)
+
+---
+
 ## ⚙️ Configurações Avançadas
 
 ### Auto-Deploy
@@ -180,8 +208,8 @@ Se retornar 200, a API está saudável!
 
 **Solução:**
 1. Verifique os logs no Render
-2. Certifique-se que `pom.xml` está correto
-3. Verifique se Java 21 está configurado
+2. Certifique-se que `Dockerfile` está na pasta `barber-app`
+3. Verifique se `pom.xml` está correto
 
 ### ❌ API não inicia
 
@@ -196,6 +224,12 @@ Se retornar 200, a API está saudável!
 1. Verifique se o Supabase está acessível
 2. Confirme as credenciais
 3. Teste a conexão no Supabase Dashboard
+
+### ❌ Porta incorreta
+
+**Solução:**
+O Render usa a variável `$PORT` automaticamente.
+O Dockerfile já está configurado para isso!
 
 ---
 
@@ -221,12 +255,13 @@ No Dashboard do Render você pode ver:
 - ✅ Logs em tempo real
 - ✅ Uso de recursos
 - ✅ Histórico de deploys
+- ✅ Métricas do container
 
 ---
 
 ## 🎉 Pronto!
 
-Sua API está no ar! 🚀
+Sua API está no ar com Docker! 🐳🚀
 
 **URL da API:** `https://barber-app-api.onrender.com/api`
 
@@ -238,4 +273,5 @@ Sua API está no ar! 🚀
 
 ---
 
-**Dúvidas?** Consulte: https://render.com/docs
+**Dúvidas?** Consulte: https://render.com/docs/docker
+

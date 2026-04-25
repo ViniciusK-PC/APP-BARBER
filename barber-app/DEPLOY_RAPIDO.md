@@ -1,4 +1,4 @@
-# 🚀 Deploy Rápido no Render
+# 🚀 Deploy Rápido no Render (Docker)
 
 ## 📋 Checklist Rápido
 
@@ -30,8 +30,7 @@ git push -u origin main
 4. Conecte: `barber-app-api`
 5. Configure:
    - **Root Directory:** `barber-app`
-   - **Build Command:** `mvn clean package -DskipTests`
-   - **Start Command:** `java -Dserver.port=$PORT -jar target/barber-app-1.0.0.jar`
+   - **Environment:** **Docker** ⭐ (IMPORTANTE!)
 
 ### 3️⃣ Variáveis de Ambiente
 
@@ -42,7 +41,6 @@ DATABASE_URL=jdbc:postgresql://aws-1-sa-east-1.pooler.supabase.com:6543/postgres
 DATABASE_USERNAME=postgres.kmocrclrctgipgudthfd
 DATABASE_PASSWORD=9y0N0fiOnvVWOwVd
 JWT_SECRET=barber-app-secret-key-production-2024
-JAVA_VERSION=21
 ```
 
 **Clique em:** Create Web Service
@@ -56,6 +54,15 @@ Aguarde 5-10 minutos e sua API estará no ar!
 **URL:** `https://barber-app-api.onrender.com/api`
 
 **Swagger:** `https://barber-app-api.onrender.com/api/swagger-ui.html`
+
+---
+
+## 🐳 Por que Docker?
+
+✅ Render não tem Java nativo
+✅ Docker funciona perfeitamente
+✅ Build automático
+✅ Já está tudo configurado!
 
 ---
 
