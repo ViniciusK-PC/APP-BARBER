@@ -1,0 +1,80 @@
+:root {
+  font-family: Inter, Montserrat, system-ui, sans-serif;
+  background: #08090b;
+  color: #f7f7f8;
+}
+
+body {
+  margin: 0;
+}
+
+.chefe-shell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  background: #08090b;
+}
+
+.chefe-sidebar {
+  border-right: 1px solid #272a30;
+  background: #111317;
+  padding: 32px 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.chefe-sidebar strong {
+  letter-spacing: 2px;
+  font-size: 14px;
+}
+
+.chefe-sidebar span,
+.chefe-copy,
+.chefe-grid p {
+  color: #9da3ad;
+}
+
+.chefe-content {
+  padding: 56px;
+}
+
+.chefe-kicker {
+  color: #1ea7e1;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.chefe-content h1 {
+  margin: 0;
+  font-size: 36px;
+}
+
+.chefe-copy {
+  max-width: 620px;
+  line-height: 1.7;
+}
+
+.chefe-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(180px, 1fr));
+  gap: 18px;
+  margin-top: 36px;
+}
+
+.chefe-grid article {
+  border: 1px solid #272a30;
+  background: #15171c;
+  border-radius: 14px;
+  padding: 24px;
+}
+
+.chefe-grid svg {
+  color: #1ea7e1;
+}
+
+.chefe-grid h2 {
+  font-size: 16px;
+}
